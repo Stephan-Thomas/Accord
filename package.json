@@ -1,0 +1,7 @@
+{
+  "name": "accord-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "cd genlayer_escrow/frontend && npm install && npx vite build"
+  }
+}
