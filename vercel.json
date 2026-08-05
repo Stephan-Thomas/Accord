@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd genlayer_escrow/frontend && npm run build",
+  "outputDirectory": "genlayer_escrow/frontend/dist",
+  "framework": "vite"
+}

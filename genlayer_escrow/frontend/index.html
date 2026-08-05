@@ -4,246 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GenLayer Escrow & Dispute Resolution</title>
-    <style>
-        :root {
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --purple: #8b5cf6;
-        }
-
-        body {
-            margin: 0;
-            padding: 2rem;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 680px;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            padding: 2rem;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin: 0 0 0.25rem 0;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin: 0 0 1.5rem 0;
-        }
-
-        .section {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        input[type="text"], input[type="number"], textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-family: inherit;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            margin-bottom: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        button {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0.75rem 1.25rem;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            width: 100%;
-        }
-
-        button:hover { background-color: var(--accent-hover); }
-        button:active { transform: scale(0.98); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        button.danger { background-color: var(--danger); }
-        button.danger:hover { background-color: #dc2626; }
-        button.success { background-color: var(--success); }
-        button.success:hover { background-color: #059669; }
-        button.warning { background-color: var(--warning); color: #000; }
-        button.purple { background-color: var(--purple); }
-        button.purple:hover { background-color: #7c3aed; }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background-color: var(--border);
-            color: var(--text-main);
-        }
-
-        .status-badge.pending { background-color: var(--warning); color: #000; }
-        .status-badge.delivered { background-color: var(--accent); }
-        .status-badge.accepted { background-color: var(--success); }
-        .status-badge.dispute_ruled { background-color: var(--purple); }
-        .status-badge.resolved_client { background-color: var(--danger); }
-        .status-badge.resolved_freelancer { background-color: var(--success); }
-        .status-badge.split { background-color: #38bdf8; color: #000; }
-
-        .hidden { display: none !important; }
-        .flex { display: flex; gap: 1rem; }
-        .flex-col { display: flex; flex-direction: column; gap: 1rem; }
-        
-        .state-card {
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            font-size: 0.85rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .state-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-        .state-row:last-child { margin-bottom: 0; }
-        .state-label { color: var(--text-muted); }
-        .state-val { font-family: monospace; font-weight: 600; }
-
-        #log {
-            margin-top: 1rem;
-            padding: 1rem;
-            background-color: #000;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: #10b981;
-            white-space: pre-wrap;
-            max-height: 180px;
-            overflow-y: auto;
-            border: 1px solid #1e293b;
-        }
-    </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
     <div class="container">
-        <h1>GenLayer Escrow</h1>
-        <p class="subtitle">Decentralized AI-Arbitrated Escrow with Optimistic Democracy Appeals</p>
-
-        <!-- Deploy Section -->
-        <div class="section" id="section-deploy">
-            <div class="grid-2">
-                <div>
-                    <label for="clientPrivateKey">Client Dev Private Key</label>
-                    <input type="text" id="clientPrivateKey" placeholder="0x..." value="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80">
-                </div>
-                <div>
-                    <label for="freelancerPrivateKey">Freelancer Dev Private Key</label>
-                    <input type="text" id="freelancerPrivateKey" placeholder="0x..." value="0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d">
-                </div>
-            </div>
+        <div class="header-wrapper">
+            <h1>GenLayer Escrow</h1>
+            <p class="subtitle">Decentralized AI-Arbitrated Escrow on GenLayer Studionet</p>
             
-            <div style="font-size: 0.75rem; color: #f59e0b; margin-top: -0.5rem; margin-bottom: 1rem; padding: 0.5rem 0.75rem; background-color: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; border-radius: 6px;">
-                <strong>SECURITY DISCLAIMER:</strong> The pre-filled private keys above are standard public local-devnet keys (Anvil/Hardhat defaults). They are included ONLY for local testing/demo convenience and MUST NEVER be used to hold real funds or on any public network.
+            <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.75rem; align-items: center;">
+                <label for="networkSelect" style="margin-bottom: 0;">Network:</label>
+                <select id="networkSelect" style="background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.4rem 0.8rem; border-radius: 8px; font-family: inherit; font-size: 0.9rem;">
+                    <option value="studionet" selected>GenLayer Studionet</option>
+                    <option value="localnet">Localnet (Devnet)</option>
+                </select>
+                <span id="netBadge" class="status-badge delivered">STUDIONET</span>
+            </div>
+        </div>
+
+        <!-- Deploy or Connect Section -->
+        <div class="section" id="section-deploy">
+            <div class="info-box warning" style="margin-bottom: 1.5rem;">
+                <div class="info-icon">🌐</div>
+                <div>
+                    <strong>STUDIONET DEPLOYMENT & WALLETS:</strong>
+                    Connected to <strong>GenLayer Studionet</strong> (<code>https://studio.genlayer.com/api</code>). You can load an existing deployed contract address below or deploy a new Escrow contract.
+                </div>
+            </div>
+
+            <!-- Quick Load Deployed Contract -->
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                <label for="existingContractAddress">Load Deployed Contract Address</label>
+                <div class="flex" style="gap: 0.5rem; margin-top: 0.5rem;">
+                    <input type="text" id="existingContractAddress" placeholder="0x..." style="margin-bottom: 0;">
+                    <button id="btnLoadContract" class="outline" style="width: auto; whitespace: nowrap;">Connect Contract</button>
+                </div>
             </div>
 
             <div class="grid-2">
-                <div>
+                <div class="input-group">
+                    <label for="clientPrivateKey">Client Private Key</label>
+                    <input type="text" id="clientPrivateKey" placeholder="0x...">
+                </div>
+                <div class="input-group">
+                    <label for="freelancerPrivateKey">Freelancer Private Key</label>
+                    <input type="text" id="freelancerPrivateKey" placeholder="0x...">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
                     <label for="amount">Escrow Amount (WEI)</label>
                     <input type="number" id="amount" placeholder="1000" value="1000">
                 </div>
-                <div>
+                <div class="input-group">
                     <label for="timeoutSeconds">Delivery Timeout (Sec)</label>
                     <input type="number" id="timeoutSeconds" placeholder="604800" value="604800">
                 </div>
             </div>
 
-            <label for="appealWindowSeconds">Appeal Window (Sec)</label>
-            <input type="number" id="appealWindowSeconds" placeholder="86400" value="86400">
+            <div class="input-group">
+                <label for="appealWindowSeconds">Appeal Window (Sec)</label>
+                <input type="number" id="appealWindowSeconds" placeholder="86400" value="86400">
+            </div>
 
-            <label for="spec">Job Specification</label>
-            <textarea id="spec" placeholder="Describe the job requirements in detail for the AI arbitrator...">Build a responsive landing page with hero section and working contact form.</textarea>
+            <div class="input-group">
+                <label for="spec">Job Specification</label>
+                <textarea id="spec" placeholder="Describe the job requirements in detail for the AI arbitrator...">Build a responsive landing page with hero section and working contact form on GenLayer Studionet.</textarea>
+            </div>
 
-            <button id="btnDeploy">Deploy & Deposit Escrow</button>
+            <button id="btnDeploy" style="margin-top: 1rem;">Initialize New Escrow Contract</button>
         </div>
 
         <!-- Contract View Section -->
         <div class="section hidden" id="section-interact">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="contract-header">
                 <div>
-                    <h3 style="margin: 0; font-size: 1.1rem;">Contract: <span id="contractAddress" style="font-family: monospace; color: var(--accent);"></span></h3>
+                    <h3>Contract Active</h3>
+                    <div class="address-display" id="contractAddress">0x...</div>
                 </div>
                 <div>
                     <span id="contractStatus" class="status-badge pending">PENDING</span>
@@ -251,47 +90,84 @@
             </div>
 
             <!-- State Summary -->
-            <div class="state-card">
-                <div class="state-row"><span class="state-label">Client:</span> <span id="valClient" class="state-val">-</span></div>
-                <div class="state-row"><span class="state-label">Freelancer:</span> <span id="valFreelancer" class="state-val">-</span></div>
-                <div class="state-row"><span class="state-label">Escrow Amount:</span> <span id="valAmount" class="state-val">0 WEI</span></div>
-                <div class="state-row"><span class="state-label">Contract Balance:</span> <span id="valBalance" class="state-val">0 WEI</span></div>
-                <div class="state-row"><span class="state-label">Delivery Ref:</span> <span id="valDeliveryRef" class="state-val">None</span></div>
-                <div class="state-row"><span class="state-label">Appeal Status:</span> <span id="valIsAppealed" class="state-val">Not Appealed</span></div>
+            <div class="state-dashboard">
+                <div class="state-card state-card-full">
+                    <span class="state-label">Client</span>
+                    <span id="valClient" class="state-val">-</span>
+                </div>
+                <div class="state-card state-card-full">
+                    <span class="state-label">Freelancer</span>
+                    <span id="valFreelancer" class="state-val">-</span>
+                </div>
+                <div class="state-card">
+                    <span class="state-label">Escrow Amount</span>
+                    <span id="valAmount" class="state-val highlight">0 WEI</span>
+                </div>
+                <div class="state-card">
+                    <span class="state-label">Contract Balance</span>
+                    <span id="valBalance" class="state-val highlight">0 WEI</span>
+                </div>
+                <div class="state-card state-card-full">
+                    <span class="state-label">Delivery Reference</span>
+                    <span id="valDeliveryRef" class="state-val">None</span>
+                </div>
+                <div class="state-card">
+                    <span class="state-label">Appeal Status</span>
+                    <span id="valIsAppealed" class="state-val">Not Appealed</span>
+                </div>
+                <div class="state-card">
+                    <span class="state-label">AI Ruling</span>
+                    <span id="valRulingDecision" class="state-val">N/A</span>
+                </div>
             </div>
 
             <!-- Action: Deliver Work -->
-            <div id="action-deliver">
-                <label for="deliveryRef">Delivery Reference / Work Link</label>
-                <textarea id="deliveryRef" placeholder="Provide link or text of the completed work...">https://github.com/freelancer/landing-page-build</textarea>
+            <div id="action-deliver" class="hidden">
+                <div class="input-group">
+                    <label for="deliveryRef">Delivery Reference / Work Link</label>
+                    <textarea id="deliveryRef" placeholder="Provide link or text of the completed work...">https://github.com/freelancer/landing-page-build</textarea>
+                </div>
                 <button id="btnDeliver">Submit Work (As Freelancer)</button>
             </div>
 
             <!-- Action: Review & Dispute -->
             <div id="action-review" class="hidden flex-col">
-                <div class="flex">
-                    <button id="btnAccept" class="success">Accept Work & Release Funds</button>
-                    <button id="btnDispute" class="danger">Initiate AI Dispute Resolution</button>
+                <div class="grid-2">
+                    <button id="btnAccept" class="success">Accept Work</button>
+                    <button id="btnDispute" class="danger">Initiate AI Dispute</button>
                 </div>
-                <button id="btnAutoRelease" class="warning">Trigger Timeout Auto-Release (If Timeout Expired)</button>
+                <button id="btnAutoRelease" class="warning">Trigger Timeout Release</button>
             </div>
 
             <!-- Action: Dispute Ruled & Appeal -->
             <div id="action-appeal" class="hidden flex-col">
-                <div style="background-color: rgba(139, 92, 246, 0.15); border: 1px solid var(--purple); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                    <p style="margin: 0 0 0.5rem 0; font-weight: 600;">Initial AI Ruling: <span id="valRulingDecision" style="color: var(--purple); font-weight: 700;">-</span></p>
-                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">You can appeal this ruling once within the appeal window for extra scrutiny.</p>
+                <div class="info-box purple">
+                    <div class="info-icon">⚖️</div>
+                    <div>
+                        <strong>Ruling Rendered:</strong> You can appeal this ruling once within the appeal window for extra scrutiny by the Optimistic Democracy protocol on Studionet.
+                    </div>
                 </div>
-                <div class="flex">
-                    <button id="btnAppeal" class="purple">Appeal Ruling (AI Re-Arbitration)</button>
-                    <button id="btnFinalize" class="success">Finalize Settlement Payout</button>
+                <div class="grid-2">
+                    <button id="btnAppeal" class="purple">Appeal Ruling</button>
+                    <button id="btnFinalize" class="success">Finalize Settlement</button>
                 </div>
             </div>
 
-            <button id="btnRefresh" style="margin-top: 1rem; background-color: transparent; border: 1px solid var(--border); color: var(--text-muted);">Refresh Contract State</button>
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+                <button id="btnRefresh" class="outline" style="width: auto;">↻ Refresh On-Chain State</button>
+                <button id="btnSwitchContract" class="outline" style="width: auto;">⚙️ Change / Deploy Contract</button>
+            </div>
         </div>
 
-        <div id="log">Logs will appear here...</div>
+        <div class="terminal-wrapper">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+                <span id="terminalChainLabel">studionet-terminal ~ bash</span>
+            </div>
+            <div id="log">System initialized. Ready for GenLayer Studionet transactions...</div>
+        </div>
     </div>
 
     <script type="module" src="/main.js"></script>

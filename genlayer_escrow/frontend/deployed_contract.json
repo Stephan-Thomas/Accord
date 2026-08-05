@@ -1,0 +1,21 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "contractAddress": "0x25b88ebaF240EED196f6F01aeAF7E25dE3bd2c7f",
+  "deployTxHash": "0xfeec772836a2722ad9c017ec2d0a3dc53ec08c089fe9ecf0cacc7d23e6b14e33",
+  "deployedAt": "2026-08-05T12:57:35.187Z",
+  "client": {
+    "address": "0xc1b566515463133EF7aA1E6Cad106eb290BAFCeB",
+    "privateKey": "0x33cd6c77e90edfd3630b2a0cf5f7082e5a15f207663a124b081f23b1e42c6b1b"
+  },
+  "freelancer": {
+    "address": "0x6e70cc3fBA10e11236fDb15CdbaAf50B903A905B",
+    "privateKey": "0xf0f9504b14ab7e528b6775384aa5f9465885ca99ae0ba06c88a5bb080a734d66"
+  },
+  "params": {
+    "amount": "1000",
+    "spec": "Build landing page with AI escrow dispute resolution on GenLayer Studionet.",
+    "timeoutSec": 604800,
+    "appealSec": 86400
+  }
+}
