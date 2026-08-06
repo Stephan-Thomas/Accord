@@ -35,7 +35,7 @@ async function main() {
         chain: studionet
     });
 
-    const contractPath = path.resolve(__dirname, '../../contracts/escrow.py');
+    const contractPath = path.resolve(__dirname, '../contracts/escrow.py');
     const contractCode = fs.readFileSync(contractPath, 'utf8');
 
     const escrowAmount = 1000n;

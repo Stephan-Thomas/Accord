@@ -39,7 +39,7 @@ async function main() {
     });
 
     // 3. Read contract code
-    const contractPath = path.resolve(__dirname, '../../contracts/escrow.py');
+    const contractPath = path.resolve(__dirname, '../contracts/escrow.py');
     console.log(`\n📄 Reading contract from: ${contractPath}`);
     const contractCode = fs.readFileSync(contractPath, 'utf8');
 
